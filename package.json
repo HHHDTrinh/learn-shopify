@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-three/drei": "^9.82.0",
+    "@react-three/fiber": "^8.14.1",
     "@shopify/shopify-api": "^7.6.0",
     "@szhsin/react-accordion": "^1.2.3",
+    "@types/three": "^0.155.1",
     "autoprefixer": "10.4.15",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
@@ -23,6 +26,7 @@
     "react-dom": "18.2.0",
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
-    "tailwindcss": "3.3.3"
+    "tailwindcss": "3.3.3",
+    "three": "^0.156.1"
   }
 }

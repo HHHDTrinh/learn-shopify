@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 const Footer = () => {
   return (
     <>
@@ -48,7 +50,7 @@ const Footer = () => {
                       autoCapitalize='off'
                     />
                     <button
-                      className='font-body hover:text-secondary-accent border-b-text border-secondary-text hover:border-secondary-accent mt-2 inline-flex items-center justify-center pb-1 align-top  lg:ml-2 lg:mt-0'
+                      className='font-body border-b-text border-secondary-text mt-2 inline-flex items-center justify-center pb-1 align-top hover:border-secondary-accent hover:text-secondary-accent  lg:ml-2 lg:mt-0'
                       type='submit'
                       name='commit'
                       id='Subscribe'
@@ -223,7 +225,7 @@ const Footer = () => {
                   <ul className='-ml-2'>
                     <li className='mb-2 ml-2 inline-block'>
                       <a
-                        className='hover:text-footer-accent fill-current'
+                        className='fill-current hover:text-footer-accent'
                         href='https://twitter.com/getjoggy'
                         target='_blank'
                       >
@@ -247,7 +249,7 @@ const Footer = () => {
 
                     <li className='mb-2 ml-2 inline-block'>
                       <a
-                        className='hover:text-footer-accent fill-current'
+                        className='fill-current hover:text-footer-accent'
                         href='https://www.instagram.com/getjoggy'
                         target='_blank'
                       >
@@ -273,7 +275,7 @@ const Footer = () => {
 
                     <li className='mb-2 ml-2 inline-block'>
                       <a
-                        className='hover:text-footer-accent fill-current'
+                        className='fill-current hover:text-footer-accent'
                         href='https://www.tiktok.com/@getjoggy'
                         target='_blank'
                       >
@@ -297,7 +299,7 @@ const Footer = () => {
 
                     <li className='mb-2 ml-2 inline-block'>
                       <a
-                        className='hover:text-footer-accent fill-current'
+                        className='fill-current hover:text-footer-accent'
                         href='mailto:hello@getjoggy.com'
                         target='_blank'
                       >
@@ -373,4 +375,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default memo(Footer);

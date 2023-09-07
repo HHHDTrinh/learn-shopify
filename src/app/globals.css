@@ -242,6 +242,10 @@ h3.szh-accordion__item-heading > button {
   margin-top: 1.2em;
 }
 
+.featured-navigation li {
+  position: relative;
+}
+
 @media screen and (min-width: 1024px) {
   .section-x-padding {
     padding-left: 1rem;
@@ -282,10 +286,27 @@ h3.szh-accordion__item-heading > button {
   }
 }
 
+@media (min-width: 1200px) {
+  .featured-navigation.index-navigation {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
+  .featured-navigation li {
+    margin-right: 40px;
+  }
+}
+
 @media screen and (min-width: 989px) {
   nav ul li button,
   nav ul li span {
     font-size: 15px;
     line-height: 21.6px;
+  }
+}
+
+@media (min-width: 550px) {
+  .featured-navigation li {
+    white-space: nowrap;
   }
 }

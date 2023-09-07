@@ -49,7 +49,7 @@ export const productsQuery = `
     }
   }
   query getProductList {
-    products(first: 5, reverse: true) {
+    products(first: 10, reverse: true) {
       edges {
         node {
           id

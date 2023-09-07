@@ -3,15 +3,473 @@ import { useEffect, useState } from 'react';
 import { Accordion, AccordionItem } from '@szhsin/react-accordion';
 
 import { storefrontClient, productsQuery } from '@/helpers/shopify';
+import ModelContainer from '@/components/common/ModelContainer';
+import { accordions } from '@/configs/data/home';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
+
+  const handleModelPositions = (key) => {
+    switch (key) {
+      case 0:
+        return [0, 0.5, 0];
+      case 1:
+        return [0, -1, 0];
+      case 2:
+        return [0, -1.5, 0];
+      case 3:
+        return [0, 1.4, -3];
+      case 4:
+        return [0, -3.5, 15];
+      case 5:
+        return [0, -0.5, -1];
+      default:
+        break;
+    }
+  };
+
+  const handleModelScale = (key) => {
+    switch (key) {
+      case 0:
+        return 1.25;
+      case 1:
+        return 20;
+      case 2:
+        return 85;
+      default:
+        return 1;
+    }
+  };
+
+  const handleFormattedPrice = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
   useEffect(() => {
     const handleGetProducts = async () => {
-      const data = await storefrontClient.query({
-        data: productsQuery,
-      });
-      const productss = data.body.data.products.edges
+      // const log = await storefrontClient.query({
+      //   data: productsQuery,
+      // });
+      // console.log(log);
+      const data = {
+        data: {
+          products: {
+            edges: [
+              {
+                node: {
+                  id: 'gid://shopify/Product/8614494142758',
+                  handle: 'orange-energy-drink',
+                  description: 'Healthy energy drink made from fresh orange',
+                  title: 'Orange Energy Drink',
+                  totalInventory: 10,
+                  availableForSale: true,
+                  variants: {
+                    edges: [
+                      {
+                        node: {
+                          id: 'gid://shopify/ProductVariant/46508734316838',
+                          title: 'Default Title',
+                          quantityAvailable: 10,
+                          priceV2: {
+                            amount: '1.0',
+                            currencyCode: 'USD',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  priceRange: {
+                    maxVariantPrice: {
+                      amount: '1.0',
+                      currencyCode: 'USD',
+                    },
+                    minVariantPrice: {
+                      amount: '1.0',
+                      currencyCode: 'USD',
+                    },
+                  },
+                  media: {
+                    edges: [
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'MODEL_3D',
+                          sources: [
+                            {
+                              format: 'glb',
+                              mimeType: 'model/gltf-binary',
+                              url: 'https://model3d.shopifycdn.com/models/o/047ed83f942a5203/soda_can_2_.glb',
+                            },
+                            {
+                              format: 'usdz',
+                              mimeType: 'model/vnd.usdz+zip',
+                              url: 'https://model3d.shopifycdn.com/models/o/9addb3765de0612b/soda_can_2_.usdz',
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'IMAGE',
+                          id: 'gid://shopify/MediaImage/35293992354086',
+                          image: {
+                            altText: null,
+                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_orange.png?v=1694096440',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                node: {
+                  id: 'gid://shopify/Product/8607411700006',
+                  handle: 'wild-energy-drink',
+                  description: 'Wild Fruit + Energy Drink = Healthy',
+                  title: 'Wild Energy Drink',
+                  totalInventory: 5,
+                  availableForSale: true,
+                  variants: {
+                    edges: [
+                      {
+                        node: {
+                          id: 'gid://shopify/ProductVariant/46473521725734',
+                          title: 'Default Title',
+                          quantityAvailable: 5,
+                          priceV2: {
+                            amount: '1.5',
+                            currencyCode: 'USD',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  priceRange: {
+                    maxVariantPrice: {
+                      amount: '1.5',
+                      currencyCode: 'USD',
+                    },
+                    minVariantPrice: {
+                      amount: '1.5',
+                      currencyCode: 'USD',
+                    },
+                  },
+                  media: {
+                    edges: [
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'MODEL_3D',
+                          sources: [
+                            {
+                              format: 'glb',
+                              mimeType: 'model/gltf-binary',
+                              url: 'https://model3d.shopifycdn.com/models/o/66fd784f68b900a8/soda_can_1_.glb',
+                            },
+                            {
+                              format: 'usdz',
+                              mimeType: 'model/vnd.usdz+zip',
+                              url: 'https://model3d.shopifycdn.com/models/o/8c4a9451dfb818b4/soda_can_1_.usdz',
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'IMAGE',
+                          id: 'gid://shopify/MediaImage/35239312097574',
+                          image: {
+                            altText: null,
+                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_purple.png?v=1693747317',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                node: {
+                  id: 'gid://shopify/Product/8607406948646',
+                  handle: 'ats-energy-drink',
+                  description: 'ATS - Authentic Taste of Soda',
+                  title: 'ATS Energy Drink',
+                  totalInventory: 9,
+                  availableForSale: true,
+                  variants: {
+                    edges: [
+                      {
+                        node: {
+                          id: 'gid://shopify/ProductVariant/46473500918054',
+                          title: 'Default Title',
+                          quantityAvailable: 9,
+                          priceV2: {
+                            amount: '1.25',
+                            currencyCode: 'USD',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  priceRange: {
+                    maxVariantPrice: {
+                      amount: '1.25',
+                      currencyCode: 'USD',
+                    },
+                    minVariantPrice: {
+                      amount: '1.25',
+                      currencyCode: 'USD',
+                    },
+                  },
+                  media: {
+                    edges: [
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'MODEL_3D',
+                          sources: [
+                            {
+                              format: 'glb',
+                              mimeType: 'model/gltf-binary',
+                              url: 'https://model3d.shopifycdn.com/models/o/95516078540807f6/soda_can.glb',
+                            },
+                            {
+                              format: 'usdz',
+                              mimeType: 'model/vnd.usdz+zip',
+                              url: 'https://model3d.shopifycdn.com/models/o/f65b5d2782846630/soda_can.usdz',
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'IMAGE',
+                          id: 'gid://shopify/MediaImage/35239307477286',
+                          image: {
+                            altText: null,
+                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_x.png?v=1693747218',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                node: {
+                  id: 'gid://shopify/Product/8607401771302',
+                  handle: 'origin-energy-drink',
+                  description: 'Energy Drink + Original Tatse = Perfect',
+                  title: 'Origin Energy Drink',
+                  totalInventory: 3,
+                  availableForSale: true,
+                  variants: {
+                    edges: [
+                      {
+                        node: {
+                          id: 'gid://shopify/ProductVariant/46473477849382',
+                          title: 'Default Title',
+                          quantityAvailable: 3,
+                          priceV2: {
+                            amount: '1.5',
+                            currencyCode: 'USD',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  priceRange: {
+                    maxVariantPrice: {
+                      amount: '1.5',
+                      currencyCode: 'USD',
+                    },
+                    minVariantPrice: {
+                      amount: '1.5',
+                      currencyCode: 'USD',
+                    },
+                  },
+                  media: {
+                    edges: [
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'MODEL_3D',
+                          sources: [
+                            {
+                              format: 'glb',
+                              mimeType: 'model/gltf-binary',
+                              url: 'https://model3d.shopifycdn.com/models/o/96ef8a2be4c4314c/high_poly_soda_can.glb',
+                            },
+                            {
+                              format: 'usdz',
+                              mimeType: 'model/vnd.usdz+zip',
+                              url: 'https://model3d.shopifycdn.com/models/o/c0982b5662f5bc7a/high_poly_soda_can.usdz',
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'IMAGE',
+                          id: 'gid://shopify/MediaImage/35239329825062',
+                          image: {
+                            altText: null,
+                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_original.png?v=1693747632',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                node: {
+                  id: 'gid://shopify/Product/8607395643686',
+                  handle: 'diet-soda',
+                  description: 'Diet + Soda = Best Match',
+                  title: 'Diet Soda',
+                  totalInventory: 5,
+                  availableForSale: true,
+                  variants: {
+                    edges: [
+                      {
+                        node: {
+                          id: 'gid://shopify/ProductVariant/46473456681254',
+                          title: 'Default Title',
+                          quantityAvailable: 5,
+                          priceV2: {
+                            amount: '2.0',
+                            currencyCode: 'USD',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  priceRange: {
+                    maxVariantPrice: {
+                      amount: '2.0',
+                      currencyCode: 'USD',
+                    },
+                    minVariantPrice: {
+                      amount: '2.0',
+                      currencyCode: 'USD',
+                    },
+                  },
+                  media: {
+                    edges: [
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'MODEL_3D',
+                          sources: [
+                            {
+                              format: 'glb',
+                              mimeType: 'model/gltf-binary',
+                              url: 'https://model3d.shopifycdn.com/models/o/d6221bba14b1de2d/diet_soda.glb',
+                            },
+                            {
+                              format: 'usdz',
+                              mimeType: 'model/vnd.usdz+zip',
+                              url: 'https://model3d.shopifycdn.com/models/o/4929f64a55cb620a/diet_soda.usdz',
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'IMAGE',
+                          id: 'gid://shopify/MediaImage/35239331758374',
+                          image: {
+                            altText: null,
+                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_diet.png?v=1693747670',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                node: {
+                  id: 'gid://shopify/Product/8607371952422',
+                  handle: 'bunny-energy-drink',
+                  description: 'Bunny Bunny Funny Funny',
+                  title: 'Bunny Energy Drink',
+                  totalInventory: 7,
+                  availableForSale: true,
+                  variants: {
+                    edges: [
+                      {
+                        node: {
+                          id: 'gid://shopify/ProductVariant/46473368699174',
+                          title: 'Default Title',
+                          quantityAvailable: 7,
+                          priceV2: {
+                            amount: '1.25',
+                            currencyCode: 'USD',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  priceRange: {
+                    maxVariantPrice: {
+                      amount: '1.25',
+                      currencyCode: 'USD',
+                    },
+                    minVariantPrice: {
+                      amount: '1.25',
+                      currencyCode: 'USD',
+                    },
+                  },
+                  media: {
+                    edges: [
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'MODEL_3D',
+                          sources: [
+                            {
+                              format: 'glb',
+                              mimeType: 'model/gltf-binary',
+                              url: 'https://model3d.shopifycdn.com/models/o/de2b8041d7294ddb/bunny_can.glb',
+                            },
+                            {
+                              format: 'usdz',
+                              mimeType: 'model/vnd.usdz+zip',
+                              url: 'https://model3d.shopifycdn.com/models/o/6730003213d7b5cc/bunny_can.usdz',
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        node: {
+                          alt: '',
+                          mediaContentType: 'IMAGE',
+                          id: 'gid://shopify/MediaImage/35239308689702',
+                          image: {
+                            altText: null,
+                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_bunny.png?v=1693747245',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+      // const productss = data.body.data.products.edges
+      const productss = data.data.products.edges
         .map(({ node }) => {
           if (node.totalInventory <= 0) {
             return false;
@@ -32,25 +490,6 @@ const Home = () => {
     };
     handleGetProducts();
   }, []);
-
-  const accordions = [
-    {
-      header:
-        'What is a water-based delivery system and what makes that superior?',
-      desc: [
-        'Joggy’s proprietary water-based delivery system supports 4x more absorption compared to conventional oil-based dosages.',
-        'Note: In a pharmacokinetic study performed by Santé Laboratories, conventional CBD oils were found to only provide 5 to 20 percent absorption, while water-based lipid encapsulation technology tested provided up to 80 percent absorption.',
-      ],
-    },
-    {
-      header: 'What makes Joggy products proprietary?',
-      desc: [
-        'Joggy products use proprietary Powered by Santé® ingredient delivery technology. Manufactured in Austin, Texas the use of the technology is groundbreaking in offering innovation to a stagnant space oversaturated with oil-based products that simply don’t work without unmanageable, potentially toxic large doses. Developed over the past 4 years by leading PhD scientists specializing in small-particle drug delivery with 26 granted and pending patents globally, the technology solves for poor solubility, stability and bioavailability of hard-to-absorb ingredients like cannabinoids.',
-        'Joggy products are made with a lipid encapsulation technology that supports 4x more absorption compared to conventional oil-based dosages. This allows the consumer to truthfully get what they are paying for and reap benefits quickly vs. waiting for the effects to kick in long term. If we say you are getting 25mgs in each serving, your body is absorbing up to 80% of 25mg vs. wasting it along the way.',
-      ],
-    },
-    { header: 'Learn more', desc: ['We have a full FAQ list, check it out'] },
-  ];
 
   return (
     <>
@@ -158,206 +597,96 @@ const Home = () => {
           </div>
         </section>
       </div>
-      {/* <div className='shopify-section'>
-            <section className='featured-navigation index-navigation bg-secondary-background text-secondary-text  border-t-grid border-grid-color'>
-              <div className='section-x-padding py-theme'>
-                <nav
-                  role='navigation'
-                  className='w-full text-left text-xl lg:text-6xl'
-                  aria-label='Shop by Feeling'
-                >
-                  <ul className='space-y-1'>
-                    <li className='lg:inline-block'>
-                      <a
-                        href='#'
-                        className='font-heading-serif hover:text-secondary-accent featured-list__link relative break-words'
-                      >
-                        <span className='hover:underline'>1. Energy</span>
-                      </a>
-                      <div className='featured-list__link-hover js-enabled w-third-screen pointer-events-none fixed left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 transform lg:block'>
-                        <div
-                          data-image-id=''
-                          className='responsive-image-wrapper relative mx-auto my-0 w-full overflow-hidden '
-                          style={{
-                            height: 0,
-                            paddingTop: '100.0%',
-                          }}
-                        >
-                          <img
-                            className='responsive-image lazyload absolute left-0 top-0 block h-auto w-full max-w-full transition-opacity duration-200 ease-in-out'
-                            data-src='//getjoggy.com/cdn/shop/products/Can-02-Double_{width}x.gif?v=1677620435'
-                            data-widths='[180,360,540,720,900,1000]'
-                            data-aspectratio='1.0'
-                            data-sizes='auto'
-                            tabIndex='-1'
-                            alt='Joggy Energy Drink'
-                          />
-                          <noscript>
-                            <div className='absolute left-0 top-0 h-full w-full'>
-                              <img
-                                className=' '
-                                src='//getjoggy.com/cdn/shop/products/Can-02-Double_2048x2048.gif?v=1677620435'
-                                alt='Joggy Energy Drink'
-                              />
-                            </div>
-                          </noscript>
-                        </div>
+      <div>
+        <section className='featured-navigation index-navigation bg-secondary-background text-secondary-text  border-t-grid border-grid-color'>
+          <div className='section-x-padding py-theme'>
+            <nav
+              role='navigation'
+              className='w-full text-left text-xl lg:text-6xl'
+            >
+              <ul className='cursor-pointer space-y-1'>
+                {products.length > 0 &&
+                  products.map((product, idx) => (
+                    <li
+                      key={idx + product.title}
+                      className='group break-words lg:inline-block'
+                    >
+                      <p className='hover:underline'>
+                        {idx + 1}.{' '}
+                        {product.title.substring(0, product.title.indexOf(' '))}
+                      </p>
+                      <div className='absolute top-0 hidden w-full translate-y-[-15%] group-hover:block'>
+                        <ModelContainer
+                          modelPath={product.modelSrc}
+                          positionArray={handleModelPositions(idx)}
+                          scaleNumb={handleModelScale(idx)}
+                        />
                       </div>
                     </li>
-                    <li className='lg:inline-block'>
-                      <a
-                        href='#'
-                        className='font-heading-serif hover:text-secondary-accent featured-list__link relative break-words'
-                      >
-                        <span className='hover:underline'>2. Calm</span>
-                      </a>
-                      <div className='featured-list__link-hover js-enabled w-third-screen pointer-events-none fixed left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 transform lg:block'>
-                        <div
-                          data-image-id=''
-                          className='responsive-image-wrapper relative mx-auto my-0 w-full overflow-hidden '
-                          style={{
-                            height: 0,
-                            paddingTop: '100.0%',
-                          }}
-                        >
-                          <img
-                            className='responsive-image lazyload absolute left-0 top-0 block h-auto w-full max-w-full transition-opacity duration-200 ease-in-out'
-                            data-src='//getjoggy.com/cdn/shop/products/rechargies_{width}x.gif?v=1646262787'
-                            data-widths='[180,360,540,720,900,1000]'
-                            data-aspectratio='1.0'
-                            data-sizes='auto'
-                            tabIndex='-1'
-                            alt='Re-Chargies'
-                          />
-                          <noscript>
-                            <div className='absolute left-0 top-0 h-full w-full'>
-                              <img
-                                className=' '
-                                src='//getjoggy.com/cdn/shop/products/rechargies_2048x2048.gif?v=1646262787'
-                                alt='Re-Chargies'
-                              />
-                            </div>
-                          </noscript>
-                        </div>
-                      </div>
-                    </li>
-                    <li className='lg:inline-block'>
-                      <a
-                        href='#'
-                        className='font-heading-serif hover:text-secondary-accent featured-list__link relative break-words'
-                      >
-                        <span className='hover:underline'>3. Focus</span>
-                      </a>
-                      <div className='featured-list__link-hover js-enabled w-third-screen pointer-events-none fixed left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 transform lg:block'>
-                        <div
-                          data-image-id=''
-                          className='responsive-image-wrapper relative mx-auto my-0 w-full overflow-hidden '
-                          style={{
-                            height: 0,
-                            paddingTop: '100.0%',
-                          }}
-                        >
-                          <img
-                            className='responsive-image lazyload absolute left-0 top-0 block h-auto w-full max-w-full transition-opacity duration-200 ease-in-out'
-                            data-src='//getjoggy.com/cdn/shop/products/runnershigh_{width}x.gif?v=1646262869'
-                            data-widths='[180,360,540,720,900,1000]'
-                            data-aspectratio='1.0'
-                            data-sizes='auto'
-                            tabIndex='-1'
-                            alt='Ready Steady | Joggy - Full Spectrum CBD | Energizing Drops | Rotating 3D Product Image'
-                          />
-                          <noscript>
-                            <div className='absolute left-0 top-0 h-full w-full'>
-                              <img
-                                className=' '
-                                src='//getjoggy.com/cdn/shop/products/runnershigh_2048x2048.gif?v=1646262869'
-                                alt='Ready Steady | Joggy - Full Spectrum CBD | Energizing Drops | Rotating 3D Product Image'
-                              />
-                            </div>
-                          </noscript>
-                        </div>
-                      </div>
-                    </li>
-                    <li className='lg:inline-block'>
-                      <a
-                        href='#'
-                        className='font-heading-serif hover:text-secondary-accent featured-list__link relative break-words'
-                      >
-                        <span className='hover:underline'>4. Recovery</span>
-                      </a>
-                      <div className='featured-list__link-hover js-enabled w-third-screen pointer-events-none fixed left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 transform lg:block'>
-                        <div
-                          data-image-id=''
-                          className='responsive-image-wrapper relative mx-auto my-0 w-full overflow-hidden '
-                          style={{
-                            height: 0,
-                            paddingTop: '100.0%',
-                          }}
-                        >
-                          <img
-                            className='responsive-image lazyload absolute left-0 top-0 block h-auto w-full max-w-full transition-opacity duration-200 ease-in-out'
-                            data-src='//getjoggy.com/cdn/shop/products/joystick_{width}x.gif?v=1646262930'
-                            data-widths='[180,360,540,720,900,1000]'
-                            data-aspectratio='1.0'
-                            data-sizes='auto'
-                            tabIndex='-1'
-                            alt='Joy Stick | Joggy - Full Spectrum CBD Muscle Relief | Rotating Product Image with Aluminum Case | Recyclable &amp; Refillable'
-                          />
-                          <noscript>
-                            <div className='absolute left-0 top-0 h-full w-full'>
-                              <img
-                                className=' '
-                                src='//getjoggy.com/cdn/shop/products/joystick_2048x2048.gif?v=1646262930'
-                                alt='Joy Stick | Joggy - Full Spectrum CBD Muscle Relief | Rotating Product Image with Aluminum Case | Recyclable &amp; Refillable'
-                              />
-                            </div>
-                          </noscript>
-                        </div>
-                      </div>
-                    </li>
-                    <li className='lg:inline-block'>
-                      <a
-                        href='#'
-                        className='font-heading-serif hover:text-secondary-accent featured-list__link relative break-words'
-                      >
-                        <span className='hover:underline'>5. Sleep</span>
-                      </a>
-                      <div className='featured-list__link-hover js-enabled w-third-screen pointer-events-none fixed left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 transform lg:block'>
-                        <div
-                          data-image-id=''
-                          className='responsive-image-wrapper relative mx-auto my-0 w-full overflow-hidden '
-                          style={{
-                            height: 0,
-                            paddingTop: '100.0%',
-                          }}
-                        >
-                          <img
-                            className='responsive-image lazyload absolute left-0 top-0 block h-auto w-full max-w-full transition-opacity duration-200 ease-in-out'
-                            data-src='//getjoggy.com/cdn/shop/products/rechargies_{width}x.gif?v=1646262787'
-                            data-widths='[180,360,540,720,900,1000]'
-                            data-aspectratio='1.0'
-                            data-sizes='auto'
-                            tabIndex='-1'
-                            alt='Re-Chargies'
-                          />
-                          <noscript>
-                            <div className='absolute left-0 top-0 h-full w-full'>
-                              <img
-                                className=' '
-                                src='//getjoggy.com/cdn/shop/products/rechargies_2048x2048.gif?v=1646262787'
-                                alt='Re-Chargies'
-                              />
-                            </div>
-                          </noscript>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </nav>
+                  ))}
+              </ul>
+            </nav>
+          </div>
+        </section>
+      </div>
+      <div>
+        <section className='bg-secondary-background text-secondary-text border-t-grid border-grid-color overflow-hidden'>
+          <div className='py-theme px-2 lg:px-4'>
+            <div className='default flex justify-center text-center text-base'>
+              <div className='w-full lg:w-full'>
+                <div className='rte  font-body break-words'>
+                  <p>FEATURED PRODUCTS</p>
+                </div>
               </div>
-            </section>
-          </div> */}
-      {/* Here */}
+            </div>
+          </div>
+        </section>
+      </div>
+      <div className='w-full bg-black'>
+        <section className='border-t-grid border-grid-color'>
+          <div className='bg-black'>
+            <ul className='grid grid-cols-2 gap-[1px] bg-white lg:grid-cols-12'>
+              {products.length > 0 &&
+                products.map((product, idx) => (
+                  <li
+                    key={product.title}
+                    className='bg-secondary-background text-secondary-text col-span-2 cursor-pointer lg:col-span-4'
+                  >
+                    <div className='group relative h-[500px] w-full overflow-hidden'>
+                      <ModelContainer
+                        modelPath={product.modelSrc}
+                        positionArray={handleModelPositions(idx)}
+                        scaleNumb={handleModelScale(idx)}
+                      />
+                      <figure className='absolute bottom-0 top-0 hidden w-full group-hover:block'>
+                        <img
+                          src={product.imageSrc}
+                          alt={product.imageAlt}
+                          className='h-full w-full translate-y-[-54px] object-fill'
+                        />
+                      </figure>
+                      <div className='border-t-grid border-grid-color section-x-padding absolute bottom-0 flex w-full justify-between py-4'>
+                        <div className='w-3/5 break-words text-left'>
+                          <p
+                            aria-hidden='true'
+                            className='product-grid-title group-hover:text-[rgb(10,140,3)]'
+                          >
+                            {product.title}
+                          </p>
+                        </div>
+                        <div className='pl-2 text-right'>
+                          <span>
+                            {handleFormattedPrice.format(product.price)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </section>
+      </div>
       <div>
         <section className='faqs-section bg-border border-t-grid border-grid-color right half grid grid-flow-row-dense grid-cols-1 overflow-hidden lg:grid-cols-12'>
           <div className='faqs-section__header section-x-padding py-theme relative flex bg-[rgb(243,195,28)] text-black lg:col-span-6 '>
