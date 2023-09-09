@@ -1,9 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Accordion, AccordionItem } from '@szhsin/react-accordion';
-
-import { storefrontClient, productsQuery } from '@/helpers/shopify';
-import ModelContainer from '@/components/common/ModelContainer';
+import Link from 'next/link';
+import { storefrontClient } from '@/helpers/shopify';
+import { productsQuery } from '@/configs/graphql/query';
+import { ModelContainer } from '@/components';
 import { accordions } from '@/configs/data/home';
 
 const Home = () => {
@@ -48,10 +49,9 @@ const Home = () => {
 
   useEffect(() => {
     const handleGetProducts = async () => {
-      // const log = await storefrontClient.query({
+      // const data = await storefrontClient.query({
       //   data: productsQuery,
       // });
-      // console.log(log);
       const data = {
         data: {
           products: {
@@ -611,17 +611,22 @@ const Home = () => {
                       key={idx + product.title}
                       className='group break-words lg:inline-block'
                     >
-                      <p className='hover:underline'>
-                        {idx + 1}.{' '}
-                        {product.title.substring(0, product.title.indexOf(' '))}
-                      </p>
-                      <div className='absolute top-0 hidden w-full translate-y-[-15%] group-hover:block'>
-                        <ModelContainer
-                          modelPath={product.modelSrc}
-                          positionArray={handleModelPositions(idx)}
-                          scaleNumb={handleModelScale(idx)}
-                        />
-                      </div>
+                      <Link href={`/product/${product.slug}`} passHref>
+                        <p className='group-hover:text-[rgb(10,140,3)] group-hover:underline'>
+                          {idx + 1}.{' '}
+                          {product.title.substring(
+                            0,
+                            product.title.indexOf(' ')
+                          )}
+                        </p>
+                        <div className='absolute top-0 hidden w-full translate-y-[-15%] group-hover:block'>
+                          <ModelContainer
+                            modelPath={product.modelSrc}
+                            positionArray={handleModelPositions(idx)}
+                            scaleNumb={handleModelScale(idx)}
+                          />
+                        </div>
+                      </Link>
                     </li>
                   ))}
               </ul>
@@ -653,33 +658,35 @@ const Home = () => {
                     className='bg-secondary-background text-secondary-text col-span-2 cursor-pointer lg:col-span-4'
                   >
                     <div className='group relative h-[500px] w-full overflow-hidden'>
-                      <ModelContainer
-                        modelPath={product.modelSrc}
-                        positionArray={handleModelPositions(idx)}
-                        scaleNumb={handleModelScale(idx)}
-                      />
-                      <figure className='absolute bottom-0 top-0 hidden w-full group-hover:block'>
-                        <img
-                          src={product.imageSrc}
-                          alt={product.imageAlt}
-                          className='h-full w-full translate-y-[-54px] object-fill'
+                      <Link href={`/product/${product.slug}`} passHref>
+                        <ModelContainer
+                          modelPath={product.modelSrc}
+                          positionArray={handleModelPositions(idx)}
+                          scaleNumb={handleModelScale(idx)}
                         />
-                      </figure>
-                      <div className='border-t-grid border-grid-color section-x-padding absolute bottom-0 flex w-full justify-between py-4'>
-                        <div className='w-3/5 break-words text-left'>
-                          <p
-                            aria-hidden='true'
-                            className='product-grid-title group-hover:text-[rgb(10,140,3)]'
-                          >
-                            {product.title}
-                          </p>
+                        <figure className='absolute bottom-0 top-0 hidden w-full group-hover:block'>
+                          <img
+                            src={product.imageSrc}
+                            alt={product.imageAlt}
+                            className='h-full w-full translate-y-[-54px] object-fill'
+                          />
+                        </figure>
+                        <div className='border-t-grid border-grid-color section-x-padding absolute bottom-0 flex w-full justify-between py-4'>
+                          <div className='w-3/5 break-words text-left'>
+                            <p
+                              aria-hidden='true'
+                              className='product-grid-title group-hover:text-[rgb(10,140,3)]'
+                            >
+                              {product.title}
+                            </p>
+                          </div>
+                          <div className='pl-2 text-right'>
+                            <span>
+                              {handleFormattedPrice.format(product.price)}
+                            </span>
+                          </div>
                         </div>
-                        <div className='pl-2 text-right'>
-                          <span>
-                            {handleFormattedPrice.format(product.price)}
-                          </span>
-                        </div>
-                      </div>
+                      </Link>
                     </div>
                   </li>
                 ))}

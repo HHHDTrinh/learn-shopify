@@ -1,9 +1,17 @@
+'use client';
+import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import Link from 'next/link';
 
 const Navbar = () => {
+  const pathname = usePathname();
+
   return (
-    <nav className='section-x-padding absolute left-0 top-0 z-10 flex w-full items-center justify-between py-2'>
+    <nav
+      className={`section-x-padding absolute left-0 top-0 z-10 flex w-full items-center justify-between py-2 ${
+        pathname !== '/' ? 'bg-black' : 'bg-transparent'
+      }`}
+    >
       <Link href='/'>
         <svg
           x='0px'
@@ -15,7 +23,11 @@ const Navbar = () => {
           }}
         >
           <path
-            className='fill-black text-black'
+            className={
+              pathname !== '/'
+                ? 'fill-white text-white'
+                : 'fill-black text-black'
+            }
             d='M687.5,223.9c0.1-1.8,0.2-3.5,0.2-5.3V82.2l34.9,141.6H687.5z M602,160.6c-4.4,0-7.9-3.5-7.9-7.9
     c0-4.4,3.5-7.9,7.9-7.9c4.4,0,7.9,3.5,7.9,7.9c0,0,0,0,0,0c0.1,4.3-3.4,7.9-7.7,7.9C602.1,160.6,602.1,160.6,602,160.6 M517.4,223.9
     c0.1-1.8,0.2-3.5,0.2-5.3v-51c4.1,23,17.5,43.3,36.9,56.3H517.4z M431.9,160.6c-4.4,0-7.9-3.5-7.9-7.9c0-4.4,3.5-7.9,7.9-7.9

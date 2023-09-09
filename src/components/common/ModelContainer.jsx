@@ -8,12 +8,14 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 const ModelViewer = ({ modelPath, positionArray, scaleNumb }) => {
   const reft = useRef();
   const gltf = useLoader(GLTFLoader, modelPath);
+  //Reuse the model in many components
   const scene = useMemo(() => {
     return gltf.scene.clone();
   }, [gltf]);
   useFrame((state, delta) => {
     const time = state.clock.getElapsedTime();
-    reft.current.rotation.y = 0.5 * time;
+    // reft.current.rotation.y = 0.5 * time;
+    reft.current.rotation.y = time;
   });
   return (
     <group dispose={null}>
@@ -40,7 +42,7 @@ const ModelContainer = ({ modelPath, positionArray, scaleNumb }) => {
         positionArray={positionArray}
         scaleNumb={scaleNumb}
       />
-      {/* <OrbitControls target={[0, 0, 0]} /> */}
+      {/* <OrbitControls target={[0, 0, 0]} enableZoom={false} /> */}
     </Canvas>
   );
 };

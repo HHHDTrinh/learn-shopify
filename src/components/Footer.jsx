@@ -3,7 +3,7 @@ import { memo } from 'react';
 const Footer = () => {
   return (
     <>
-      <div id='shopify-section-footer' className='shopify-section'>
+      <div id='shopify-section-footer' className='shopify-section mt-auto'>
         <footer
           className='jg-footer bg-footer-background text-footer-text'
           data-section-id='footer'

@@ -246,6 +246,11 @@ h3.szh-accordion__item-heading > button {
   position: relative;
 }
 
+.py-theme-half {
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
 @media screen and (min-width: 1024px) {
   .section-x-padding {
     padding-left: 1rem;
