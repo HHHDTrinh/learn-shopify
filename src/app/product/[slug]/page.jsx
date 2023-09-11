@@ -1,18 +1,34 @@
 'use client';
-import { useParams } from 'next/navigation';
+import { useParams, redirect } from 'next/navigation';
 import Link from 'next/link';
-import { useQuery } from '@apollo/client';
-import { productQuery } from '@/configs/graphql/query';
+import { useQuery, useMutation } from '@apollo/client';
+import { productQuery, createCheckout } from '@/configs/graphql/query';
+import { useState } from 'react';
+
+import { ModelContainer } from '@/components';
 
 const ProductDetails = () => {
   const params = useParams();
   const handle = String(params.slug);
+
+  const [quantity, setQuantity] = useState(1);
 
   const { loading, error, data } = useQuery(productQuery, {
     variables: {
       handle,
     },
   });
+  const [createCheckoutFnc] = useMutation(createCheckout);
+  const handleCheckout = async () => {
+    const res = await createCheckoutFnc({
+      variables: {
+        quantity,
+        variantId: productData.productVariant,
+      },
+    });
+    const { webUrl } = res.data.checkoutCreate.checkout;
+    window.location.href = webUrl;
+  };
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
@@ -27,9 +43,51 @@ const ProductDetails = () => {
     price: data.product.variants.edges[0].node.priceV2.amount,
     slug: data.product.handle,
     totalInventory: data.product.totalInventory,
+    productVariant: data.product.variants.edges[0].node.id,
   };
 
-  console.log(productData);
+  const handleFormattedPrice = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
+  const handleModelPositions = (name) => {
+    switch (name) {
+      case 'orange-energy-drink':
+        return [0, 0, 0];
+      case 'wild-energy-drink':
+        return [0, -2, 0];
+      case 'ats-energy-drink':
+        return [0, -1, -2];
+      case 'origin-energy-drink':
+        return [0, 0, 0];
+      case 'bunny-energy-drink':
+        return [0, 0, 0];
+      case 'diet-soda':
+        return [0, 0, 0];
+      default:
+        break;
+    }
+  };
+
+  const handleModelScale = (name) => {
+    switch (name) {
+      case 'orange-energy-drink':
+        return 1.25;
+      case 'wild-energy-drink':
+        return 22.5;
+      case 'ats-energy-drink':
+        return 60;
+      case 'origin-energy-drink':
+        return 1;
+      case 'bunny-energy-drink':
+        return 1;
+      case 'diet-soda':
+        return 0.25;
+      default:
+        return 1;
+    }
+  };
 
   return (
     <>
@@ -64,6 +122,79 @@ const ProductDetails = () => {
                 </li>
               </ol>
             </nav>
+          </div>
+        </section>
+        <section className='border-t-grid border-grid-color flex min-h-screen'>
+          <div className='basis-1/2 cursor-grab'>
+            <ModelContainer
+              modelPath={productData.modelSrc}
+              positionArray={handleModelPositions(productData.slug)}
+              scaleNumb={handleModelScale(productData.slug)}
+              haveOrbit
+            />
+          </div>
+          <div className='flex basis-1/2 flex-col border-l-[1px] border-solid border-white px-[0.5rem] pt-[1rem] text-white lg:px-[1rem]'>
+            <h1 className='product-title-block font-heading mt-4 break-words text-2xl lg:text-[3.052rem] lg:leading-[calc(1.2*.9)]'>
+              {productData.title}
+            </h1>
+            <h2 className='rte mt-8'>
+              <em>
+                <strong>{productData.description}</strong>
+              </em>
+            </h2>
+            <p
+              className={`my-8 uppercase ${
+                productData.availableForSale
+                  ? 'text-[rgb(10,140,3)]'
+                  : 'text-rose-500'
+              }`}
+            >
+              {productData.availableForSale ? 'Available' : 'Out of stock'}
+            </p>
+            <div className='flex flex-col'>
+              <p>Quantity:</p>
+              <div className='-mx-2 mt-2 flex items-center'>
+                <button
+                  className={`h-7 w-7 fill-current ${
+                    quantity === 0
+                      ? 'invisible cursor-not-allowed'
+                      : 'cursor-pointer'
+                  }`}
+                  disabled={quantity === 0}
+                  id='decrease'
+                  onClick={() => setQuantity((prev) => prev - 1)}
+                  value='Decrease Value'
+                >
+                  -
+                </button>
+                <input
+                  className='border-b-text border-secondary-text w-10 appearance-none bg-transparent p-2 text-center'
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                />
+                <button
+                  id='increase'
+                  className='h-7 w-7 fill-current'
+                  onClick={() => setQuantity((prev) => prev + 1)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <p className='mt-8 text-[1.953rem]'>
+              {handleFormattedPrice.format(productData.price * quantity)}
+            </p>
+            <div className='mt-20 flex flex-col gap-4'>
+              <button className='border-[1px] border-solid border-white px-1 py-2 uppercase'>
+                add to cart
+              </button>
+              <button
+                className='border-[1px] border-solid border-[rgb(10,140,3)] bg-[rgb(10,140,3)] px-1 py-2 uppercase'
+                onClick={handleCheckout}
+              >
+                buy it now
+              </button>
+            </div>
           </div>
         </section>
       </div>
