@@ -1,13 +1,16 @@
 'use client';
-import { useParams, redirect } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation } from '@apollo/client';
-import { productQuery, createCheckout } from '@/configs/graphql/query';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
+import { productQuery, createCheckout } from '@/configs/graphql/query';
 import { ModelContainer } from '@/components';
+import { CartsContext } from '@/helpers/context';
 
 const ProductDetails = () => {
+  const { setCarts } = useContext(CartsContext);
+
   const params = useParams();
   const handle = String(params.slug);
 
@@ -185,7 +188,22 @@ const ProductDetails = () => {
               {handleFormattedPrice.format(productData.price * quantity)}
             </p>
             <div className='mt-20 flex flex-col gap-4'>
-              <button className='border-[1px] border-solid border-white px-1 py-2 uppercase'>
+              <button
+                className='border-[1px] border-solid border-white px-1 py-2 uppercase'
+                onClick={() => {
+                  setCarts((prev) => [
+                    ...prev,
+                    {
+                      id: productData.id,
+                      modelSrc: productData.modelSrc,
+                      title: productData.title,
+                      quantity: quantity,
+                      price: productData.price,
+                      variantId: productData.productVariant,
+                    },
+                  ]);
+                }}
+              >
                 add to cart
               </button>
               <button

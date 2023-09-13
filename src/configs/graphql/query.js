@@ -167,3 +167,63 @@ export const createCheckout = gql`
     }
   }
 `;
+
+export const createCheckoutWithCarts = gql`
+  query checkoutURL($id: ID!) {
+    cart(id: $id) {
+      checkoutUrl
+    }
+  }
+`;
+
+export const createCarts = gql`
+  mutation createCart($cartInput: CartInput) {
+    cartCreate(input: $cartInput) {
+      cart {
+        id
+        createdAt
+        updatedAt
+        lines(first: 10) {
+          edges {
+            node {
+              id
+              quantity
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                  priceV2 {
+                    amount
+                    currencyCode
+                  }
+                  product {
+                    id
+                    title
+                  }
+                }
+              }
+            }
+          }
+        }
+        estimatedCost {
+          totalAmount {
+            amount
+            currencyCode
+          }
+          subtotalAmount {
+            amount
+            currencyCode
+          }
+          totalTaxAmount {
+            amount
+            currencyCode
+          }
+          totalDutyAmount {
+            amount
+            currencyCode
+          }
+        }
+      }
+    }
+  }
+`;
