@@ -6,8 +6,9 @@ import { apolloClient } from '@/helpers/apollo';
 import { Navbar, Footer, SliderTop } from '@/components';
 import { usePathname } from 'next/navigation';
 import './globals.css';
+import Head from 'next/head';
 
-export const metadata = {
+const metadata = {
   title: 'Joggy',
   description: 'Joggy Shopify',
 };
@@ -21,10 +22,10 @@ export default function RootLayout({ children }) {
   return (
     <ApolloProvider client={apolloClient}>
       <html lang='en'>
-        <head>
+        <Head>
           <title>{metadata.title}</title>
           <meta name='description' content={metadata.description} />
-        </head>
+        </Head>
         <body>
           <SliderTop />
           <main className='relative flex min-h-[100vh] flex-col overflow-x-hidden'>
