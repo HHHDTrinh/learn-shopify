@@ -101,18 +101,16 @@ const Home = () => {
                     data-src='//getjoggy.com/cdn/shop/files/Screen_Shot_2022-01-28_at_12.09_1_{width}x.jpg?v=1646029443'
                     data-aspectratio='1.752284263959391'
                     data-sizes='auto'
-                    alt=''
                     tabIndex='-1'
                   />
                   <div className='responsive-image-placeholder absolute bottom-0 left-0 right-0 top-0'></div>
                   <noscript>
                     <img
-                      className='absolute bottom-0 left-0 right-0 top-0 h-full   w-full object-cover'
+                      className='absolute bottom-0 left-0 right-0 top-0 h-full w-full object-cover'
                       src='//getjoggy.com/cdn/shop/files/Screen_Shot_2022-01-28_at_12.09_1_2048x2048.jpg?v=1646029443'
-                      alt=''
                     />
                   </noscript>
-                  Sorry, your browser doesn't support embedded videos.
+                  Sorry, your browser doesn&apos;t support embedded videos.
                 </video>
               </div>
             </div>

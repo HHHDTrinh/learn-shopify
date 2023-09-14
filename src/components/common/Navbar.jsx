@@ -13,7 +13,11 @@ import {
 } from '@/configs/graphql/query';
 
 const Navbar = () => {
-  const cartID = JSON.parse(localStorage.getItem('cartID'));
+  const [cartID, setCartID] = useState(null);
+
+  useEffect(() => {
+    setCartID(JSON.parse(localStorage.getItem('cartID')));
+  }, []);
 
   const pathname = usePathname();
 
@@ -66,7 +70,7 @@ const Navbar = () => {
     if (products) {
       setCarts(products);
     }
-  }, [cartsData]);
+  }, [cartsData, products]);
 
   const handleFormattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -166,7 +170,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li className='ml-[1rem] flex self-stretch uppercase hover:fill-secondary-accent hover:text-secondary-accent'>
-            <Link href='#'>JOIN JOGGY'S COMMUNITY</Link>
+            <Link href='#'>JOIN JOGGY&apos;S COMMUNITY</Link>
           </li>
           <li className='ml-[1rem] flex self-stretch uppercase hover:fill-secondary-accent hover:text-secondary-accent'>
             <Link href='#'>

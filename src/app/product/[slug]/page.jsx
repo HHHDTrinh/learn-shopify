@@ -2,7 +2,7 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation } from '@apollo/client';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   productQuery,
   createCheckout,
