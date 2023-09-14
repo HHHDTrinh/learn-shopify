@@ -1,21 +1,72 @@
 'use client';
 import { usePathname } from 'next/navigation';
-import { memo, useContext, useState, useEffect } from 'react';
+import { memo, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useMutation, useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
-import { CartsContext } from '@/helpers/context';
 import { ModelContainer } from '..';
-import { createCarts, createCheckoutWithCarts } from '@/configs/graphql/query';
+import {
+  createCheckoutWithCarts,
+  getCarts,
+  removeItemCart,
+  productsQuery,
+} from '@/configs/graphql/query';
 
 const Navbar = () => {
+  const cartID = JSON.parse(localStorage.getItem('cartID'));
+
   const pathname = usePathname();
-  const { carts, setCarts } = useContext(CartsContext);
-  const cartsLength = carts.length;
 
   const [openCarts, setOpenCarts] = useState(false);
-  const [createCartsFnc] = useMutation(createCarts);
+  const [carts, setCarts] = useState([]);
+  let cartsLength = carts.length;
+
   const [createCheckoutWithCartsFnc] = useLazyQuery(createCheckoutWithCarts);
+  const [removeItemCartFnc] = useMutation(removeItemCart);
+  const { data: productsData } = useQuery(productsQuery);
+  const { data: cartsData } = useQuery(getCarts, {
+    variables: {
+      id: cartID,
+    },
+  });
+
+  const cartIDs = cartsData?.cart.lines.edges.map(
+    ({ node }) => node.merchandise.id
+  );
+
+  const handleResponseQuantity = (vrid) => {
+    const res = cartsData?.cart.lines.edges.filter(
+      ({ node }) => node.merchandise.id === vrid
+    );
+    return res?.at(0).node.quantity;
+  };
+  const products = productsData?.products.edges
+    .filter(({ node }) => {
+      if (cartIDs) {
+        return cartIDs.indexOf(node.variants.edges[0].node.id) !== -1;
+      }
+      return false;
+    })
+    .map(({ node }) => {
+      if (node.totalInventory <= 0) {
+        return false;
+      }
+      return {
+        id: node.id,
+        title: node.title,
+        modelSrc: node.media.edges[0].node.sources[0].url,
+        price: node.variants.edges[0].node.priceV2.amount,
+        variantId: node.variants.edges[0].node.id,
+        quantity: handleResponseQuantity(node.variants.edges[0].node.id),
+      };
+    })
+    .filter(Boolean);
+
+  useEffect(() => {
+    if (products) {
+      setCarts(products);
+    }
+  }, [cartsData]);
 
   const handleFormattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -38,24 +89,22 @@ const Navbar = () => {
   }
 
   const handleCheckout = async () => {
-    const data = carts.map((ct) => ({
-      quantity: ct.quantity,
-      merchandiseId: ct.variantId,
-    }));
-    const res = await createCartsFnc({
-      variables: {
-        cartInput: {
-          lines: data,
-        },
-      },
-    });
-    const _id = res.data.cartCreate.cart.id;
     const col = await createCheckoutWithCartsFnc({
       variables: {
-        id: _id,
+        id: cartID,
       },
     });
-    console.log(col);
+    const { checkoutUrl } = col.data.cart;
+    window.location.href = checkoutUrl;
+  };
+
+  const handleRemoveItem = async (ids) => {
+    await removeItemCartFnc({
+      variables: {
+        cartId: cartID,
+        lineIds: [ids],
+      },
+    });
   };
 
   useEffect(() => {
@@ -194,14 +243,14 @@ const Navbar = () => {
             X
           </span>
         </div>
-        <div className='section-x-padding flex h-full w-full flex-col py-4'>
+        <div className='section-x-padding flex min-h-full w-full flex-col overflow-y-scroll py-4'>
           {cartsLength === 0 ? (
             <p>Your cart is currently empty.</p>
           ) : (
             carts.map((cart, i) => (
               <div
                 key={i + cart.title}
-                className='section-x-padding bg-secondary-background flex py-4 transition'
+                className='section-x-padding bg-secondary-background flex max-h-[100px] justify-between py-4 transition'
               >
                 <div className='mr-4 w-10 flex-shrink-0 md:w-20'>
                   <ModelContainer
@@ -211,9 +260,7 @@ const Navbar = () => {
                   />
                 </div>
                 <div className='flex flex-col'>
-                  <h1 className='product-title-block font-heading mt-4 break-words text-2xl lg:text-[3.052rem] lg:leading-[calc(1.2*.9)]'>
-                    {cart.title}
-                  </h1>
+                  <h1>{cart.title}</h1>
                   <div className='-mx-2 mt-2 flex items-center'>
                     <button
                       className={`h-7 w-7 fill-current ${
@@ -248,9 +295,22 @@ const Navbar = () => {
                     </button>
                   </div>
                 </div>
-                <p className='text-[1.953rem]'>
-                  {handleFormattedPrice.format(cart.price * cart.quantity)}
-                </p>
+                <div className='flex flex-col justify-between'>
+                  <p className='mt-[3px]'>
+                    {handleFormattedPrice.format(cart.price * cart.quantity)}
+                  </p>
+                  <svg
+                    className='cursor-pointer self-end fill-red-600'
+                    xmlns='http://www.w3.org/2000/svg'
+                    x='0px'
+                    y='0px'
+                    width='20'
+                    height='20'
+                    viewBox='0 0 30 30'
+                  >
+                    <path d='M 13 3 A 1.0001 1.0001 0 0 0 11.986328 4 L 6 4 A 1.0001 1.0001 0 1 0 6 6 L 24 6 A 1.0001 1.0001 0 1 0 24 4 L 18.013672 4 A 1.0001 1.0001 0 0 0 17 3 L 13 3 z M 6 8 L 6 24 C 6 25.105 6.895 26 8 26 L 22 26 C 23.105 26 24 25.105 24 24 L 24 8 L 6 8 z'></path>
+                  </svg>
+                </div>
               </div>
             ))
           )}

@@ -2,15 +2,16 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation } from '@apollo/client';
-import { useState, useContext } from 'react';
-
-import { productQuery, createCheckout } from '@/configs/graphql/query';
+import { useLayoutEffect, useState } from 'react';
+import {
+  productQuery,
+  createCheckout,
+  createCarts,
+  addToCart,
+} from '@/configs/graphql/query';
 import { ModelContainer } from '@/components';
-import { CartsContext } from '@/helpers/context';
 
 const ProductDetails = () => {
-  const { setCarts } = useContext(CartsContext);
-
   const params = useParams();
   const handle = String(params.slug);
 
@@ -21,6 +22,8 @@ const ProductDetails = () => {
       handle,
     },
   });
+  const [createCartsFnc] = useMutation(createCarts);
+  const [addToCartFnc] = useMutation(addToCart);
   const [createCheckoutFnc] = useMutation(createCheckout);
   const handleCheckout = async () => {
     const res = await createCheckoutFnc({
@@ -92,6 +95,39 @@ const ProductDetails = () => {
     }
   };
 
+  const handleCreateCart = async (quantity, merchandiseId) => {
+    if (localStorage.getItem('cartID') === null) {
+      const res = await createCartsFnc({
+        variables: {
+          cartInput: {
+            lines: [
+              {
+                quantity,
+                merchandiseId,
+              },
+            ],
+          },
+        },
+      });
+      localStorage.setItem(
+        'cartID',
+        JSON.stringify(res.data.cartCreate.cart.id)
+      );
+    } else {
+      const cartID = JSON.parse(localStorage.getItem('cartID'));
+      await addToCartFnc({
+        variables: {
+          cartId: cartID,
+          lines: [
+            {
+              quantity,
+              merchandiseId,
+            },
+          ],
+        },
+      });
+    }
+  };
   return (
     <>
       <div className='mt-[79.74px] w-full bg-black'>
@@ -190,19 +226,9 @@ const ProductDetails = () => {
             <div className='mt-20 flex flex-col gap-4'>
               <button
                 className='border-[1px] border-solid border-white px-1 py-2 uppercase'
-                onClick={() => {
-                  setCarts((prev) => [
-                    ...prev,
-                    {
-                      id: productData.id,
-                      modelSrc: productData.modelSrc,
-                      title: productData.title,
-                      quantity: quantity,
-                      price: productData.price,
-                      variantId: productData.productVariant,
-                    },
-                  ]);
-                }}
+                onClick={() =>
+                  handleCreateCart(quantity, productData.productVariant)
+                }
               >
                 add to cart
               </button>

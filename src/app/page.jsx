@@ -1,15 +1,12 @@
 'use client';
-import { useEffect, useState } from 'react';
 import { Accordion, AccordionItem } from '@szhsin/react-accordion';
 import Link from 'next/link';
-import { storefrontClient } from '@/helpers/shopify';
+import { useQuery } from '@apollo/client';
 import { productsQuery } from '@/configs/graphql/query';
 import { ModelContainer } from '@/components';
 import { accordions } from '@/configs/data/home';
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
-
   const handleModelPositions = (key) => {
     switch (key) {
       case 0:
@@ -47,449 +44,24 @@ const Home = () => {
     currency: 'USD',
   });
 
-  useEffect(() => {
-    const handleGetProducts = async () => {
-      // const data = await storefrontClient.query({
-      //   data: productsQuery,
-      // });
-      const data = {
-        data: {
-          products: {
-            edges: [
-              {
-                node: {
-                  id: 'gid://shopify/Product/8614494142758',
-                  handle: 'orange-energy-drink',
-                  description: 'Healthy energy drink made from fresh orange',
-                  title: 'Orange Energy Drink',
-                  totalInventory: 10,
-                  availableForSale: true,
-                  variants: {
-                    edges: [
-                      {
-                        node: {
-                          id: 'gid://shopify/ProductVariant/46508734316838',
-                          title: 'Default Title',
-                          quantityAvailable: 10,
-                          priceV2: {
-                            amount: '1.0',
-                            currencyCode: 'USD',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                  priceRange: {
-                    maxVariantPrice: {
-                      amount: '1.0',
-                      currencyCode: 'USD',
-                    },
-                    minVariantPrice: {
-                      amount: '1.0',
-                      currencyCode: 'USD',
-                    },
-                  },
-                  media: {
-                    edges: [
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'MODEL_3D',
-                          sources: [
-                            {
-                              format: 'glb',
-                              mimeType: 'model/gltf-binary',
-                              url: 'https://model3d.shopifycdn.com/models/o/047ed83f942a5203/soda_can_2_.glb',
-                            },
-                            {
-                              format: 'usdz',
-                              mimeType: 'model/vnd.usdz+zip',
-                              url: 'https://model3d.shopifycdn.com/models/o/9addb3765de0612b/soda_can_2_.usdz',
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'IMAGE',
-                          id: 'gid://shopify/MediaImage/35293992354086',
-                          image: {
-                            altText: null,
-                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_orange.png?v=1694096440',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-              {
-                node: {
-                  id: 'gid://shopify/Product/8607411700006',
-                  handle: 'wild-energy-drink',
-                  description: 'Wild Fruit + Energy Drink = Healthy',
-                  title: 'Wild Energy Drink',
-                  totalInventory: 5,
-                  availableForSale: true,
-                  variants: {
-                    edges: [
-                      {
-                        node: {
-                          id: 'gid://shopify/ProductVariant/46473521725734',
-                          title: 'Default Title',
-                          quantityAvailable: 5,
-                          priceV2: {
-                            amount: '1.5',
-                            currencyCode: 'USD',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                  priceRange: {
-                    maxVariantPrice: {
-                      amount: '1.5',
-                      currencyCode: 'USD',
-                    },
-                    minVariantPrice: {
-                      amount: '1.5',
-                      currencyCode: 'USD',
-                    },
-                  },
-                  media: {
-                    edges: [
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'MODEL_3D',
-                          sources: [
-                            {
-                              format: 'glb',
-                              mimeType: 'model/gltf-binary',
-                              url: 'https://model3d.shopifycdn.com/models/o/66fd784f68b900a8/soda_can_1_.glb',
-                            },
-                            {
-                              format: 'usdz',
-                              mimeType: 'model/vnd.usdz+zip',
-                              url: 'https://model3d.shopifycdn.com/models/o/8c4a9451dfb818b4/soda_can_1_.usdz',
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'IMAGE',
-                          id: 'gid://shopify/MediaImage/35239312097574',
-                          image: {
-                            altText: null,
-                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_purple.png?v=1693747317',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-              {
-                node: {
-                  id: 'gid://shopify/Product/8607406948646',
-                  handle: 'ats-energy-drink',
-                  description: 'ATS - Authentic Taste of Soda',
-                  title: 'ATS Energy Drink',
-                  totalInventory: 9,
-                  availableForSale: true,
-                  variants: {
-                    edges: [
-                      {
-                        node: {
-                          id: 'gid://shopify/ProductVariant/46473500918054',
-                          title: 'Default Title',
-                          quantityAvailable: 9,
-                          priceV2: {
-                            amount: '1.25',
-                            currencyCode: 'USD',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                  priceRange: {
-                    maxVariantPrice: {
-                      amount: '1.25',
-                      currencyCode: 'USD',
-                    },
-                    minVariantPrice: {
-                      amount: '1.25',
-                      currencyCode: 'USD',
-                    },
-                  },
-                  media: {
-                    edges: [
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'MODEL_3D',
-                          sources: [
-                            {
-                              format: 'glb',
-                              mimeType: 'model/gltf-binary',
-                              url: 'https://model3d.shopifycdn.com/models/o/95516078540807f6/soda_can.glb',
-                            },
-                            {
-                              format: 'usdz',
-                              mimeType: 'model/vnd.usdz+zip',
-                              url: 'https://model3d.shopifycdn.com/models/o/f65b5d2782846630/soda_can.usdz',
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'IMAGE',
-                          id: 'gid://shopify/MediaImage/35239307477286',
-                          image: {
-                            altText: null,
-                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_x.png?v=1693747218',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-              {
-                node: {
-                  id: 'gid://shopify/Product/8607401771302',
-                  handle: 'origin-energy-drink',
-                  description: 'Energy Drink + Original Tatse = Perfect',
-                  title: 'Origin Energy Drink',
-                  totalInventory: 3,
-                  availableForSale: true,
-                  variants: {
-                    edges: [
-                      {
-                        node: {
-                          id: 'gid://shopify/ProductVariant/46473477849382',
-                          title: 'Default Title',
-                          quantityAvailable: 3,
-                          priceV2: {
-                            amount: '1.5',
-                            currencyCode: 'USD',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                  priceRange: {
-                    maxVariantPrice: {
-                      amount: '1.5',
-                      currencyCode: 'USD',
-                    },
-                    minVariantPrice: {
-                      amount: '1.5',
-                      currencyCode: 'USD',
-                    },
-                  },
-                  media: {
-                    edges: [
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'MODEL_3D',
-                          sources: [
-                            {
-                              format: 'glb',
-                              mimeType: 'model/gltf-binary',
-                              url: 'https://model3d.shopifycdn.com/models/o/96ef8a2be4c4314c/high_poly_soda_can.glb',
-                            },
-                            {
-                              format: 'usdz',
-                              mimeType: 'model/vnd.usdz+zip',
-                              url: 'https://model3d.shopifycdn.com/models/o/c0982b5662f5bc7a/high_poly_soda_can.usdz',
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'IMAGE',
-                          id: 'gid://shopify/MediaImage/35239329825062',
-                          image: {
-                            altText: null,
-                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_original.png?v=1693747632',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-              {
-                node: {
-                  id: 'gid://shopify/Product/8607395643686',
-                  handle: 'diet-soda',
-                  description: 'Diet + Soda = Best Match',
-                  title: 'Diet Soda',
-                  totalInventory: 5,
-                  availableForSale: true,
-                  variants: {
-                    edges: [
-                      {
-                        node: {
-                          id: 'gid://shopify/ProductVariant/46473456681254',
-                          title: 'Default Title',
-                          quantityAvailable: 5,
-                          priceV2: {
-                            amount: '2.0',
-                            currencyCode: 'USD',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                  priceRange: {
-                    maxVariantPrice: {
-                      amount: '2.0',
-                      currencyCode: 'USD',
-                    },
-                    minVariantPrice: {
-                      amount: '2.0',
-                      currencyCode: 'USD',
-                    },
-                  },
-                  media: {
-                    edges: [
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'MODEL_3D',
-                          sources: [
-                            {
-                              format: 'glb',
-                              mimeType: 'model/gltf-binary',
-                              url: 'https://model3d.shopifycdn.com/models/o/d6221bba14b1de2d/diet_soda.glb',
-                            },
-                            {
-                              format: 'usdz',
-                              mimeType: 'model/vnd.usdz+zip',
-                              url: 'https://model3d.shopifycdn.com/models/o/4929f64a55cb620a/diet_soda.usdz',
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'IMAGE',
-                          id: 'gid://shopify/MediaImage/35239331758374',
-                          image: {
-                            altText: null,
-                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_diet.png?v=1693747670',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-              {
-                node: {
-                  id: 'gid://shopify/Product/8607371952422',
-                  handle: 'bunny-energy-drink',
-                  description: 'Bunny Bunny Funny Funny',
-                  title: 'Bunny Energy Drink',
-                  totalInventory: 7,
-                  availableForSale: true,
-                  variants: {
-                    edges: [
-                      {
-                        node: {
-                          id: 'gid://shopify/ProductVariant/46473368699174',
-                          title: 'Default Title',
-                          quantityAvailable: 7,
-                          priceV2: {
-                            amount: '1.25',
-                            currencyCode: 'USD',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                  priceRange: {
-                    maxVariantPrice: {
-                      amount: '1.25',
-                      currencyCode: 'USD',
-                    },
-                    minVariantPrice: {
-                      amount: '1.25',
-                      currencyCode: 'USD',
-                    },
-                  },
-                  media: {
-                    edges: [
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'MODEL_3D',
-                          sources: [
-                            {
-                              format: 'glb',
-                              mimeType: 'model/gltf-binary',
-                              url: 'https://model3d.shopifycdn.com/models/o/de2b8041d7294ddb/bunny_can.glb',
-                            },
-                            {
-                              format: 'usdz',
-                              mimeType: 'model/vnd.usdz+zip',
-                              url: 'https://model3d.shopifycdn.com/models/o/6730003213d7b5cc/bunny_can.usdz',
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        node: {
-                          alt: '',
-                          mediaContentType: 'IMAGE',
-                          id: 'gid://shopify/MediaImage/35239308689702',
-                          image: {
-                            altText: null,
-                            url: 'https://cdn.shopify.com/s/files/1/0816/6627/7670/files/soda_can_bunny.png?v=1693747245',
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-            ],
-          },
-        },
+  const { data: productsData } = useQuery(productsQuery);
+  const products = productsData?.products.edges
+    .map(({ node }) => {
+      if (node.totalInventory <= 0) {
+        return false;
+      }
+      return {
+        id: node.id,
+        title: node.title,
+        description: node.description,
+        modelSrc: node.media.edges[0].node.sources[0].url,
+        imageSrc: node.media.edges[1].node.image.url,
+        imageAlt: node.title,
+        price: node.variants.edges[0].node.priceV2.amount,
+        slug: node.handle,
       };
-      // const productss = data.body.data.products.edges
-      const productss = data.data.products.edges
-        .map(({ node }) => {
-          if (node.totalInventory <= 0) {
-            return false;
-          }
-          return {
-            id: node.id,
-            title: node.title,
-            description: node.description,
-            modelSrc: node.media.edges[0].node.sources[0].url,
-            imageSrc: node.media.edges[1].node.image.url,
-            imageAlt: node.title,
-            price: node.variants.edges[0].node.priceV2.amount,
-            slug: node.handle,
-          };
-        })
-        .filter(Boolean);
-      setProducts(productss);
-    };
-    handleGetProducts();
-  }, []);
+    })
+    .filter(Boolean);
 
   return (
     <>
@@ -605,7 +177,8 @@ const Home = () => {
               className='w-full text-left text-xl lg:text-6xl'
             >
               <ul className='cursor-pointer space-y-1'>
-                {products.length > 0 &&
+                {products &&
+                  products.length > 0 &&
                   products.map((product, idx) => (
                     <li
                       key={idx + product.title}
@@ -651,7 +224,8 @@ const Home = () => {
         <section className='border-t-grid border-grid-color'>
           <div className='bg-black'>
             <ul className='grid grid-cols-2 gap-[1px] bg-white lg:grid-cols-12'>
-              {products.length > 0 &&
+              {products &&
+                products.length > 0 &&
                 products.map((product, idx) => (
                   <li
                     key={product.title}

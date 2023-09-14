@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const productsQuery = `
+export const productsQuery = gql`
   fragment FieldsForMediaTypes on Media {
     alt
     mediaContentType
@@ -199,6 +199,129 @@ export const createCarts = gql`
                   product {
                     id
                     title
+                  }
+                }
+              }
+            }
+          }
+        }
+        estimatedCost {
+          totalAmount {
+            amount
+            currencyCode
+          }
+          subtotalAmount {
+            amount
+            currencyCode
+          }
+          totalTaxAmount {
+            amount
+            currencyCode
+          }
+          totalDutyAmount {
+            amount
+            currencyCode
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const addToCart = gql`
+  mutation addItemToCart($cartId: ID!, $lines: [CartLineInput!]!) {
+    cartLinesAdd(cartId: $cartId, lines: $lines) {
+      cart {
+        id
+      }
+    }
+  }
+`;
+
+export const getCarts = gql`
+  query getCarts($id: ID!) {
+    cart(id: $id) {
+      id
+      createdAt
+      updatedAt
+      lines(first: 10) {
+        edges {
+          node {
+            id
+            quantity
+            merchandise {
+              ... on ProductVariant {
+                id
+              }
+            }
+          }
+        }
+      }
+      attributes {
+        key
+        value
+      }
+      cost {
+        totalAmount {
+          amount
+          currencyCode
+        }
+        subtotalAmount {
+          amount
+          currencyCode
+        }
+        totalTaxAmount {
+          amount
+          currencyCode
+        }
+        totalDutyAmount {
+          amount
+          currencyCode
+        }
+      }
+      buyerIdentity {
+        email
+        phone
+        customer {
+          id
+        }
+        countryCode
+        deliveryAddressPreferences {
+          ... on MailingAddress {
+            address1
+            address2
+            city
+            provinceCode
+            countryCodeV2
+            zip
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const removeItemCart = gql`
+  mutation removeItemFromCart($cartId: ID!, $lineIds: [ID!]!) {
+    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+      cart {
+        id
+        lines(first: 10) {
+          edges {
+            node {
+              id
+              quantity
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                  priceV2 {
+                    amount
+                    currencyCode
+                  }
+                  product {
+                    title
+                    handle
                   }
                 }
               }
