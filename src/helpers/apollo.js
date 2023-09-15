@@ -23,6 +23,10 @@ export const apolloClient = new ApolloClient({
     query: {
       fetchPolicy: 'network-only',
       errorPolicy: 'all',
+      notifyOnNetworkStatusChange: true,
+    },
+    queries: {
+      refetchOnWindowFocus: false,
     },
     mutate: {
       errorPolicy: 'all',

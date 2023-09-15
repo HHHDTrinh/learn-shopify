@@ -47,7 +47,7 @@ const Home = () => {
   const { loading, data: productsData } = useQuery(productsQuery);
   if (loading) {
     return (
-      <div className='bg-black/200 fixed inset-0 flex items-center justify-center text-white'>
+      <div className='fixed inset-0 flex items-center justify-center bg-black/10 text-white'>
         Loading...
       </div>
     );

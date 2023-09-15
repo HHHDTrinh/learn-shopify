@@ -34,7 +34,12 @@ const Navbar = () => {
     variables: {
       id: cartID,
     },
-    notifyOnNetworkStatusChange: true,
+  });
+
+  const [getCartsFnc] = useLazyQuery(getCarts, {
+    variables: {
+      id: cartID,
+    },
   });
 
   const cartIDs = cartsData?.cart.lines.edges.map(
@@ -124,13 +129,41 @@ const Navbar = () => {
     window.location.href = checkoutUrl;
   };
 
-  const handleRemoveItem = async (ids) => {
+  const handleRemoveItem = async (ids, title) => {
     await removeItemCartFnc({
       variables: {
         cartId: cartID,
         lineIds: [ids],
       },
     });
+    const rs = await getCartsFnc();
+    const data = rs.data?.cart.lines.edges;
+    const dataIDs = data.map(({ node }) => node.merchandise.id);
+
+    const productss = productsData?.products.edges
+      .filter(({ node }) => {
+        if (dataIDs) {
+          return dataIDs.indexOf(node.variants.edges[0].node.id) !== -1;
+        }
+        return false;
+      })
+      .map(({ node }) => {
+        if (node.totalInventory <= 0) {
+          return false;
+        }
+        return {
+          id: node.id,
+          title: node.title,
+          modelSrc: node.media.edges[0].node.sources[0].url,
+          price: node.variants.edges[0].node.priceV2.amount,
+          variantId: node.variants.edges[0].node.id,
+          quantity: handleResponseQuantity(node.variants.edges[0].node.id),
+          cartLine: handleResponseCartLine(node.variants.edges[0].node.id),
+        };
+      })
+      .filter(Boolean);
+
+    setCarts(productss);
   };
 
   const handleModelPositions = (name) => {
@@ -314,7 +347,12 @@ const Navbar = () => {
             carts.map((cart, i) => (
               <div
                 key={i + cart.title}
-                className='section-x-padding bg-secondary-background flex max-h-[100px] justify-between py-4 transition'
+                className={`${cart.title
+                  .toLowerCase()
+                  .replaceAll(
+                    ' ',
+                    '-'
+                  )} section-x-padding bg-secondary-background flex max-h-[100px] justify-between py-4 transition`}
               >
                 <div className='mr-4 w-10 flex-shrink-0 md:w-20'>
                   <ModelContainer
@@ -368,7 +406,7 @@ const Navbar = () => {
                     {handleFormattedPrice.format(cart.price * cart.quantity)}
                   </p>
                   <svg
-                    onClick={() => handleRemoveItem(cart.cartLine)}
+                    onClick={() => handleRemoveItem(cart.cartLine, cart.title)}
                     className='cursor-pointer self-end fill-red-600'
                     xmlns='http://www.w3.org/2000/svg'
                     x='0px'

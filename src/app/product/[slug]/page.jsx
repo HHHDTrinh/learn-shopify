@@ -1,7 +1,7 @@
 'use client';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import { useState } from 'react';
 import {
   productQuery,
@@ -164,7 +164,7 @@ const ProductDetails = () => {
             </nav>
           </div>
         </section>
-        <section className='border-t-grid border-grid-color flex min-h-screen'>
+        <section className='border-t-grid border-grid-color flex min-h-screen flex-col lg:flex-row'>
           <div className='basis-1/2 cursor-grab'>
             <ModelContainer
               modelPath={productData.modelSrc}
@@ -173,7 +173,7 @@ const ProductDetails = () => {
               haveOrbit
             />
           </div>
-          <div className='flex basis-1/2 flex-col border-l-[1px] border-solid border-white px-[0.5rem] pt-[1rem] text-white lg:px-[1rem]'>
+          <div className='flex basis-1/2 flex-col border-0 border-solid border-white px-[0.5rem] pb-[30px] pt-[1rem] text-white lg:border-l-[1px] lg:px-[1rem] lg:pb-0'>
             <h1 className='product-title-block font-heading mt-4 break-words text-2xl lg:text-[3.052rem] lg:leading-[calc(1.2*.9)]'>
               {productData.title}
             </h1>
