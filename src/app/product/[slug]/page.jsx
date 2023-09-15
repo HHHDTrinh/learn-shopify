@@ -22,6 +22,7 @@ const ProductDetails = () => {
       handle,
     },
   });
+
   const [createCartsFnc] = useMutation(createCarts);
   const [addToCartFnc] = useMutation(addToCart);
   const [createCheckoutFnc] = useMutation(createCheckout);

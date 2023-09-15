@@ -301,6 +301,50 @@ export const getCarts = gql`
   }
 `;
 
+export const updateQuantity = gql`
+  mutation updateQuantity($cartId: ID!, $lineId: ID!, $quantity: Int!) {
+    cartLinesUpdate(
+      cartId: $cartId
+      lines: { id: $lineId, quantity: $quantity }
+    ) {
+      cart {
+        id
+        lines(first: 10) {
+          edges {
+            node {
+              id
+              quantity
+              merchandise {
+                ... on ProductVariant {
+                  id
+                }
+              }
+            }
+          }
+        }
+        cost {
+          totalAmount {
+            amount
+            currencyCode
+          }
+          subtotalAmount {
+            amount
+            currencyCode
+          }
+          totalTaxAmount {
+            amount
+            currencyCode
+          }
+          totalDutyAmount {
+            amount
+            currencyCode
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const removeItemCart = gql`
   mutation removeItemFromCart($cartId: ID!, $lineIds: [ID!]!) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {

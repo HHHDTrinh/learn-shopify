@@ -10,6 +10,7 @@ import {
   getCarts,
   removeItemCart,
   productsQuery,
+  updateQuantity,
 } from '@/configs/graphql/query';
 
 const Navbar = () => {
@@ -25,6 +26,7 @@ const Navbar = () => {
     setCartID(id);
   }, []);
 
+  const [updateQuantityFnc] = useMutation(updateQuantity);
   const [createCheckoutWithCartsFnc] = useLazyQuery(createCheckoutWithCarts);
   const [removeItemCartFnc] = useMutation(removeItemCart);
   const { data: productsData } = useQuery(productsQuery);
@@ -32,6 +34,7 @@ const Navbar = () => {
     variables: {
       id: cartID,
     },
+    notifyOnNetworkStatusChange: true,
   });
 
   const cartIDs = cartsData?.cart.lines.edges.map(
@@ -44,6 +47,13 @@ const Navbar = () => {
     );
     return res?.at(0).node.quantity;
   };
+  const handleResponseCartLine = (vrid) => {
+    const res = cartsData?.cart.lines.edges.filter(
+      ({ node }) => node.merchandise.id === vrid
+    );
+    return res?.at(0).node.id;
+  };
+
   const products = productsData?.products.edges
     .filter(({ node }) => {
       if (cartIDs) {
@@ -62,6 +72,7 @@ const Navbar = () => {
         price: node.variants.edges[0].node.priceV2.amount,
         variantId: node.variants.edges[0].node.id,
         quantity: handleResponseQuantity(node.variants.edges[0].node.id),
+        cartLine: handleResponseCartLine(node.variants.edges[0].node.id),
       };
     })
     .filter(Boolean);
@@ -92,6 +103,16 @@ const Navbar = () => {
     );
   }
 
+  const handleUpdateCart = async (lineId, quantity) => {
+    await updateQuantityFnc({
+      variables: {
+        cartId: cartID,
+        lineId: lineId,
+        quantity,
+      },
+    });
+  };
+
   const handleCheckout = async () => {
     const col = await createCheckoutWithCartsFnc({
       variables: {
@@ -99,6 +120,7 @@ const Navbar = () => {
       },
     });
     const { checkoutUrl } = col.data.cart;
+    localStorage.removeItem('cartID');
     window.location.href = checkoutUrl;
   };
 
@@ -196,18 +218,18 @@ const Navbar = () => {
             ></path>
           </svg>
         </Link>
-        <ul className='flex items-center justify-between gap-[15px] fill-white text-white'>
-          <li className='ml-[1rem] flex self-stretch uppercase hover:fill-secondary-accent hover:text-secondary-accent'>
+        <ul className='flex items-center justify-between gap-[5px] fill-white text-white lg:gap-[15px]'>
+          <li className='ml-[1rem] hidden self-stretch uppercase hover:fill-secondary-accent hover:text-secondary-accent lg:flex'>
             <Link href='#'>
               shop <span>+</span>
             </Link>
           </li>
-          <li className='ml-[1rem] flex self-stretch uppercase hover:fill-secondary-accent hover:text-secondary-accent'>
+          <li className='ml-[1rem] hidden self-stretch uppercase hover:fill-secondary-accent hover:text-secondary-accent lg:flex'>
             <Link href='#'>
               about <span>+</span>
             </Link>
           </li>
-          <li className='ml-[1rem] flex self-stretch uppercase hover:fill-secondary-accent hover:text-secondary-accent'>
+          <li className='ml-[1rem] hidden self-stretch uppercase hover:fill-secondary-accent hover:text-secondary-accent lg:flex'>
             <Link href='#'>JOIN JOGGY&apos;S COMMUNITY</Link>
           </li>
           <li className='ml-[1rem] flex self-stretch uppercase hover:fill-secondary-accent hover:text-secondary-accent'>
@@ -275,7 +297,7 @@ const Navbar = () => {
         </ul>
       </nav>
       <div
-        className={`border-grid-color fixed right-0 top-0 z-50 h-screen w-2/6 max-w-md border-l-[1px] bg-black text-white transition-transform duration-[1500ms] ease-linear ${
+        className={`border-grid-color fixed right-0 top-0 z-50 h-screen w-5/6 max-w-md border-l-[1px] bg-black text-white transition-transform duration-[1500ms] ease-linear lg:w-2/6 ${
           openCarts ? 'translate-x-0' : 'translate-x-[200%]'
         }`}
       >
@@ -314,9 +336,10 @@ const Navbar = () => {
                       }`}
                       disabled={cart.quantity === 0}
                       id='decrease'
-                      onClick={() =>
-                        handleChange(cart.id, 'quantity', cart.quantity - 1)
-                      }
+                      onClick={() => {
+                        handleChange(cart.id, 'quantity', cart.quantity - 1);
+                        handleUpdateCart(cart.cartLine, cart.quantity - 1);
+                      }}
                       value='Decrease Value'
                     >
                       -
@@ -331,9 +354,10 @@ const Navbar = () => {
                     <button
                       id='increase'
                       className='h-7 w-7 fill-current'
-                      onClick={() =>
-                        handleChange(cart.id, 'quantity', cart.quantity + 1)
-                      }
+                      onClick={() => {
+                        handleChange(cart.id, 'quantity', cart.quantity + 1);
+                        handleUpdateCart(cart.cartLine, cart.quantity + 1);
+                      }}
                     >
                       +
                     </button>
@@ -344,6 +368,7 @@ const Navbar = () => {
                     {handleFormattedPrice.format(cart.price * cart.quantity)}
                   </p>
                   <svg
+                    onClick={() => handleRemoveItem(cart.cartLine)}
                     className='cursor-pointer self-end fill-red-600'
                     xmlns='http://www.w3.org/2000/svg'
                     x='0px'
