@@ -44,7 +44,15 @@ const Home = () => {
     currency: 'USD',
   });
 
-  const { data: productsData } = useQuery(productsQuery);
+  const { loading, data: productsData } = useQuery(productsQuery);
+  if (loading) {
+    return (
+      <div className='bg-black/200 fixed inset-0 flex items-center justify-center text-white'>
+        Loading...
+      </div>
+    );
+  }
+
   const products = productsData?.products.edges
     .map(({ node }) => {
       if (node.totalInventory <= 0) {

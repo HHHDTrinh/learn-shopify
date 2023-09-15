@@ -66,9 +66,9 @@ const ProductDetails = () => {
       case 'ats-energy-drink':
         return [0, -1, -2];
       case 'origin-energy-drink':
-        return [0, 0, 0];
+        return [0, 1, -2];
       case 'bunny-energy-drink':
-        return [0, 0, 0];
+        return [0, -1.5, 0];
       case 'diet-soda':
         return [0, 0, 0];
       default:
@@ -85,9 +85,9 @@ const ProductDetails = () => {
       case 'ats-energy-drink':
         return 60;
       case 'origin-energy-drink':
-        return 1;
+        return 1.5;
       case 'bunny-energy-drink':
-        return 1;
+        return 1.25;
       case 'diet-soda':
         return 0.25;
       default:

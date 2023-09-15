@@ -13,17 +13,17 @@ import {
 } from '@/configs/graphql/query';
 
 const Navbar = () => {
-  const [cartID, setCartID] = useState(null);
-
-  useEffect(() => {
-    setCartID(JSON.parse(localStorage.getItem('cartID')));
-  }, []);
-
   const pathname = usePathname();
 
   const [openCarts, setOpenCarts] = useState(false);
+  const [cartID, setCartID] = useState(null);
   const [carts, setCarts] = useState([]);
   let cartsLength = carts.length;
+
+  useEffect(() => {
+    const id = JSON.parse(localStorage.getItem('cartID'));
+    setCartID(id);
+  }, []);
 
   const [createCheckoutWithCartsFnc] = useLazyQuery(createCheckoutWithCarts);
   const [removeItemCartFnc] = useMutation(removeItemCart);
@@ -70,7 +70,7 @@ const Navbar = () => {
     if (products) {
       setCarts(products);
     }
-  }, [cartsData, products]);
+  }, [cartsData]);
 
   const handleFormattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -109,6 +109,44 @@ const Navbar = () => {
         lineIds: [ids],
       },
     });
+  };
+
+  const handleModelPositions = (name) => {
+    switch (name) {
+      case 'orange energy drink':
+        return [0, 0, 0];
+      case 'wild energy drink':
+        return [0, -2, 0];
+      case 'ats energy drink':
+        return [0, -1, -2];
+      case 'origin energy drink':
+        return [0, 1, -2];
+      case 'bunny energy drink':
+        return [0, -1.5, 0];
+      case 'diet soda':
+        return [0, 0, 0];
+      default:
+        break;
+    }
+  };
+
+  const handleModelScale = (name) => {
+    switch (name) {
+      case 'orange energy drink':
+        return 1.25;
+      case 'wild energy drink':
+        return 22.5;
+      case 'ats energy drink':
+        return 60;
+      case 'origin energy drink':
+        return 1.5;
+      case 'bunny energy drink':
+        return 1.25;
+      case 'diet soda':
+        return 0.25;
+      default:
+        return 1;
+    }
   };
 
   useEffect(() => {
@@ -259,8 +297,10 @@ const Navbar = () => {
                 <div className='mr-4 w-10 flex-shrink-0 md:w-20'>
                   <ModelContainer
                     modelPath={cart.modelSrc}
-                    positionArray={[0, 0, 0]}
-                    scaleNumb={1}
+                    positionArray={handleModelPositions(
+                      cart.title.toLowerCase()
+                    )}
+                    scaleNumb={handleModelScale(cart.title.toLowerCase())}
                   />
                 </div>
                 <div className='flex flex-col'>
