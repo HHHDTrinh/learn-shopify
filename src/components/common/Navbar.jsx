@@ -129,7 +129,7 @@ const Navbar = () => {
     window.location.href = checkoutUrl;
   };
 
-  const handleRemoveItem = async (ids, title) => {
+  const handleRemoveItem = async (ids) => {
     await removeItemCartFnc({
       variables: {
         cartId: cartID,
@@ -347,12 +347,7 @@ const Navbar = () => {
             carts.map((cart, i) => (
               <div
                 key={i + cart.title}
-                className={`${cart.title
-                  .toLowerCase()
-                  .replaceAll(
-                    ' ',
-                    '-'
-                  )} section-x-padding bg-secondary-background flex max-h-[100px] justify-between py-4 transition`}
+                className='section-x-padding bg-secondary-background flex max-h-[100px] justify-between py-4 transition'
               >
                 <div className='mr-4 w-10 flex-shrink-0 md:w-20'>
                   <ModelContainer
@@ -406,7 +401,7 @@ const Navbar = () => {
                     {handleFormattedPrice.format(cart.price * cart.quantity)}
                   </p>
                   <svg
-                    onClick={() => handleRemoveItem(cart.cartLine, cart.title)}
+                    onClick={() => handleRemoveItem(cart.cartLine)}
                     className='cursor-pointer self-end fill-red-600'
                     xmlns='http://www.w3.org/2000/svg'
                     x='0px'
