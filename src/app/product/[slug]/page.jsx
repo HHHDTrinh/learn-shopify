@@ -2,18 +2,22 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
   productQuery,
   createCheckout,
   createCarts,
   addToCart,
+  getCarts,
+  productsQuery,
 } from '@/configs/graphql/query';
 import { ModelContainer } from '@/components';
+import { CartsContext } from '@/app/layout';
 
 const ProductDetails = () => {
   const params = useParams();
   const handle = String(params.slug);
+  const { setCartData } = useContext(CartsContext);
 
   const [quantity, setQuantity] = useState(1);
 
@@ -22,7 +26,8 @@ const ProductDetails = () => {
       handle,
     },
   });
-
+  const [getProductsFnc] = useLazyQuery(productsQuery);
+  const [getCartsFnc] = useLazyQuery(getCarts);
   const [createCartsFnc] = useMutation(createCarts);
   const [addToCartFnc] = useMutation(addToCart);
   const [createCheckoutFnc] = useMutation(createCheckout);
@@ -128,6 +133,53 @@ const ProductDetails = () => {
         },
       });
     }
+    const cartID = JSON.parse(localStorage.getItem('cartID'));
+    const rs = await getCartsFnc({
+      variables: {
+        id: cartID,
+      },
+    });
+    const productsData = await getProductsFnc();
+    const data = rs.data?.cart.lines.edges;
+    const dataIDs = data.map(({ node }) => node.merchandise.id);
+
+    const handleResponseQuantity = (vrid) => {
+      const res = rs.data?.cart.lines.edges.filter(
+        ({ node }) => node.merchandise.id === vrid
+      );
+      return res?.at(0).node.quantity;
+    };
+    const handleResponseCartLine = (vrid) => {
+      const res = rs.data?.cart.lines.edges.filter(
+        ({ node }) => node.merchandise.id === vrid
+      );
+      return res?.at(0).node.id;
+    };
+
+    const productss = productsData?.data.products.edges
+      .filter(({ node }) => {
+        if (dataIDs) {
+          return dataIDs.indexOf(node.variants.edges[0].node.id) !== -1;
+        }
+        return false;
+      })
+      .map(({ node }) => {
+        if (node.totalInventory <= 0) {
+          return false;
+        }
+        return {
+          id: node.id,
+          title: node.title,
+          modelSrc: node.media.edges[0].node.sources[0].url,
+          price: node.variants.edges[0].node.priceV2.amount,
+          variantId: node.variants.edges[0].node.id,
+          quantity: handleResponseQuantity(node.variants.edges[0].node.id),
+          cartLine: handleResponseCartLine(node.variants.edges[0].node.id),
+        };
+      })
+      .filter(Boolean);
+
+    setCartData(productss);
   };
   return (
     <>

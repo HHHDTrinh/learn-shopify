@@ -1,6 +1,6 @@
 'use client';
 import { usePathname } from 'next/navigation';
-import { memo, useState, useEffect } from 'react';
+import { memo, useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
@@ -12,14 +12,15 @@ import {
   productsQuery,
   updateQuantity,
 } from '@/configs/graphql/query';
+import { CartsContext } from '@/app/layout';
 
 const Navbar = () => {
   const pathname = usePathname();
+  const { cartData, setCartData } = useContext(CartsContext);
 
   const [openCarts, setOpenCarts] = useState(false);
   const [cartID, setCartID] = useState(null);
-  const [carts, setCarts] = useState([]);
-  let cartsLength = carts.length;
+  let cartsLength = cartData.length;
 
   useEffect(() => {
     const id = JSON.parse(localStorage.getItem('cartID'));
@@ -84,7 +85,7 @@ const Navbar = () => {
 
   useEffect(() => {
     if (products) {
-      setCarts(products);
+      setCartData(products);
     }
   }, [cartsData]);
 
@@ -94,7 +95,7 @@ const Navbar = () => {
   });
 
   function handleChange(id, property, value) {
-    setCarts((prev) =>
+    setCartData((prev) =>
       prev.map((cts) => {
         if (cts.id === id) {
           return {
@@ -163,7 +164,7 @@ const Navbar = () => {
       })
       .filter(Boolean);
 
-    setCarts(productss);
+    setCartData(productss);
   };
 
   const handleModelPositions = (name) => {
@@ -344,7 +345,7 @@ const Navbar = () => {
           {cartsLength === 0 ? (
             <p>Your cart is currently empty.</p>
           ) : (
-            carts.map((cart, i) => (
+            cartData.map((cart, i) => (
               <div
                 key={i + cart.title}
                 className='section-x-padding bg-secondary-background flex max-h-[100px] justify-between py-4 transition'
